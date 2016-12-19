@@ -1,4 +1,4 @@
-package tracker;
+package xyz.morecraft.dev.xross.torrenter.tracker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +18,4 @@ public class Tracker {
 
         ArrayList TrackerList = new ArrayList();
     }
-
-    public void add(String filename, long md5, )
 }

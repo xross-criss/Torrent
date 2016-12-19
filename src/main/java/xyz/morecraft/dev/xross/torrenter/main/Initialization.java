@@ -1,6 +1,5 @@
-package main;
+package xyz.morecraft.dev.xross.torrenter.main;
 
-import engine.Thread;
 import tracker.Tracker;
 
 public class Initialization {
