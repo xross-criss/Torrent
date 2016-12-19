@@ -1,4 +1,4 @@
-package xyz.morecraft.dev.xross.torrenter.engine;
+package xyz.morecraft.dev.xross.torrenter.client;
 
 import java.io.IOException;
 import java.nio.file.Files;
