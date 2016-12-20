@@ -32,7 +32,10 @@ public class FileProcessor {
                 File file = entry.getKey();
                 String md5 = entry.getValue();
 
-                SFDB.add(String.valueOf(new FileEntry(md5, file.toString())));
+                //SFDB.add(String.valueOf(new FileEntry(md5, file.toString()))); TODO - check the whole function!
+                SFDB.add(path);
+                new FileEntry(md5, path);
+                partFile(file);
             }
 
         }
@@ -43,6 +46,23 @@ public class FileProcessor {
             }
         }*/
 
+    }
+
+    private void partFile(File file) {
+        double bytes = file.length();
+        double kilobytes = (bytes / 1024);
+        double megabytes = (kilobytes / 1024);
+        double gigabytes = (megabytes / 1024);
+
+        if (kilobytes <= 1.0) {
+            //TODO - fill the parts, and add them to object + String split z numerem danego parta
+        } else if (megabytes <= 1.0) {
+
+        } else if (gigabytes <= 1.0) {
+
+        } else {
+
+        }
     }
 
 }
