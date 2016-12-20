@@ -24,6 +24,16 @@ public class SimpleFileDB implements FileDB {
     }
 
     @Override
+    public List<String> getList() {
+        return list;
+    }
+
+    @Override
+    public void delete(String string) {
+        list.remove(string);
+    }
+
+    @Override
     public void clear() {
         list.clear();
     }
