@@ -1,41 +1,42 @@
 package xyz.morecraft.dev.xross.torrenter.engine.impl;
 
+import xyz.morecraft.dev.xross.torrenter.engine.FileEntry;
 import xyz.morecraft.dev.xross.torrenter.engine.proto.FileDB;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public class SimpleFileDB implements FileDB {
 
-    private List<String> list;
+    //private List<String> list;
+    HashMap<String, FileEntry> SFDBMap;
 
     public SimpleFileDB() {
-        this.list = new ArrayList<>();
+        this.SFDBMap = new HashMap<>();
     }
 
     @Override
-    public void add(String string) {
-        list.add(string);
+    public void add(String string, FileEntry FE) {
+        SFDBMap.put(string, FE);
     }
 
     @Override
     public int size() {
-        return list.size();
+        return SFDBMap.size();
     }
 
     @Override
-    public List<String> getList() {
-        return list;
+    public HashMap<String, FileEntry> getMap() {
+        return this.SFDBMap;
     }
 
     @Override
-    public void delete(String string) {
-        list.remove(string);
+    public void delete(String string, FileEntry FE) {
+        SFDBMap.remove(string, FE);
     }
 
     @Override
     public void clear() {
-        list.clear();
+        SFDBMap.clear();
     }
 
 }
