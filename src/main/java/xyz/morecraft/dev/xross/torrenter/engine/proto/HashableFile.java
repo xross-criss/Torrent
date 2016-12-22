@@ -5,6 +5,7 @@ import java.util.Objects;
 public class HashableFile {
 
     private final String controlSum;
+    private long size;
 
     public HashableFile(String controlSum) {
         if (Objects.isNull(controlSum)) {
@@ -13,10 +14,22 @@ public class HashableFile {
         this.controlSum = controlSum;
     }
 
+    public HashableFile(String controlSum, long size) {
+        this.controlSum = controlSum;
+        this.size = size;
+    }
+
     public String getControlSum() {
         return controlSum;
     }
 
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
 
     @Override
     public boolean equals(Object o) {

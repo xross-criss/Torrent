@@ -8,8 +8,6 @@ public class SimpleFileDBTest {
     @Test
     public void testSize() {
         FileDB fileDB = new SimpleFileDB();
-        fileDB.add("blab");
-        fileDB.add("dupa");
         TestCase.assertEquals(fileDB.size(), 2);
     }
 

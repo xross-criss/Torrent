@@ -1,18 +1,24 @@
 package xyz.morecraft.dev.xross.torrenter.main;
 
-import xyz.morecraft.dev.xross.torrenter.engine.FileEntry;
+import xyz.morecraft.dev.xross.torrenter.engine.FileProcessor;
+import xyz.morecraft.dev.xross.torrenter.engine.impl.SimpleFileDB;
+import xyz.morecraft.dev.xross.torrenter.engine.proto.FileDB;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        FileEntry fe1, fe2, fe3, fe4;
+        FileDB fileDB = new SimpleFileDB();
 
-        fe1 = new FileEntry("a", "a");
-        fe2 = new FileEntry("a", "a");
+        FileProcessor fileProcessor = new FileProcessor(fileDB);
 
+        fileProcessor.loadAllFilesFromFolder("C:\\dev\\private\\git\\Torrenter\\src");
 
-        System.out.println(fe1.equals(fe2));
+        fileDB.getAll().forEach(
+                fileEntry -> {
+                    System.out.println(fileEntry.toString());
+                }
+        );
 
     }
 

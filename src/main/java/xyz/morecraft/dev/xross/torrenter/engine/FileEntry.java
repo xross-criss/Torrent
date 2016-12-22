@@ -16,12 +16,13 @@ public class FileEntry extends HashableFile {
                 controlSum,
                 originalFileName,
                 System.currentTimeMillis(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                -1
         );
     }
 
-    private FileEntry(String controlSum, String originalFileName, Long timestamp, List<FilePart> partList) {
-        super(controlSum);
+    public FileEntry(String controlSum, String originalFileName, Long timestamp, List<FilePart> partList, long size) {
+        super(controlSum, size);
         this.originalFileName = originalFileName;
         this.timestamp = timestamp;
         this.partList = partList;
@@ -55,12 +56,17 @@ public class FileEntry extends HashableFile {
         return this.partList.remove(filePart);
     }
 
-    public class FilePart extends HashableFile {
+    public static class FilePart extends HashableFile {
 
         private int order;
 
         public FilePart(String controlSum, int order) {
             super(controlSum);
+            this.order = order;
+        }
+
+        public FilePart(String controlSum, long size, int order) {
+            super(controlSum, size);
             this.order = order;
         }
 
@@ -72,6 +78,24 @@ public class FileEntry extends HashableFile {
             this.order = order;
         }
 
+        @Override
+        public String toString() {
+            return "FilePart{" +
+                    "controlSum=" + getControlSum() +
+                    ", order=" + order +
+                    '}';
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "FileEntry{" +
+                "controlSum=" + getControlSum() +
+                ", originalFileName=" + originalFileName +
+                ", timestamp=" + timestamp +
+                ", partList=" + partList +
+                '}';
     }
 
 }

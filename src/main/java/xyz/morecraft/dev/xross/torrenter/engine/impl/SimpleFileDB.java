@@ -3,40 +3,61 @@ package xyz.morecraft.dev.xross.torrenter.engine.impl;
 import xyz.morecraft.dev.xross.torrenter.engine.FileEntry;
 import xyz.morecraft.dev.xross.torrenter.engine.proto.FileDB;
 
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SimpleFileDB implements FileDB {
 
-    //private List<String> list;
-    HashMap<String, FileEntry> SFDBMap;
+    private Map<String, FileEntry> stringFileEntryHashMap;
 
     public SimpleFileDB() {
-        this.SFDBMap = new HashMap<>();
+        this.stringFileEntryHashMap = new ConcurrentHashMap<>();
     }
 
     @Override
-    public void add(String string, FileEntry FE) {
-        SFDBMap.put(string, FE);
+    public void add(FileEntry fileEntry) {
+        stringFileEntryHashMap.put(fileEntry.getControlSum(), fileEntry);
     }
 
     @Override
     public int size() {
-        return SFDBMap.size();
+        return stringFileEntryHashMap.size();
     }
 
     @Override
-    public HashMap<String, FileEntry> getMap() {
-        return this.SFDBMap;
+    public FileEntry get(String hash) {
+        return stringFileEntryHashMap.get(hash);
     }
 
     @Override
-    public void delete(String string, FileEntry FE) {
-        SFDBMap.remove(string, FE);
+    public void delete(String hash) {
+        stringFileEntryHashMap.remove(hash);
+    }
+
+    @Override
+    public void delete(FileEntry fileEntry) {
+        delete(fileEntry.getControlSum());
+    }
+
+    @Override
+    public boolean contains(String hash) {
+        return stringFileEntryHashMap.containsKey(hash);
+    }
+
+    @Override
+    public boolean contains(FileEntry fileEntry) {
+        return contains(fileEntry.getControlSum());
+    }
+
+    @Override
+    public Collection<FileEntry> getAll() {
+        return stringFileEntryHashMap.values();
     }
 
     @Override
     public void clear() {
-        SFDBMap.clear();
+        stringFileEntryHashMap.clear();
     }
 
 }

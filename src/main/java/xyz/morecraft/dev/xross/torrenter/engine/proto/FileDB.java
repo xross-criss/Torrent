@@ -2,17 +2,25 @@ package xyz.morecraft.dev.xross.torrenter.engine.proto;
 
 import xyz.morecraft.dev.xross.torrenter.engine.FileEntry;
 
-import java.util.HashMap;
+import java.util.Collection;
 
 public interface FileDB {
 
-    void add(String string, FileEntry FE);
+    void add(FileEntry fileEntry);
 
     int size();
 
-    HashMap<String, FileEntry> getMap();
+    FileEntry get(String hash);
 
-    void delete(String string, FileEntry FE);
+    void delete(String hash);
+
+    void delete(FileEntry fileEntry);
+
+    boolean contains(String hash);
+
+    boolean contains(FileEntry fileEntry);
+
+    Collection<FileEntry> getAll();
 
     void clear();
 
