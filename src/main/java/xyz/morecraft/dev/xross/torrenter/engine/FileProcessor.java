@@ -1,9 +1,10 @@
 package xyz.morecraft.dev.xross.torrenter.engine;
 
 import xyz.morecraft.dev.xross.torrenter.engine.impl.SimpleFileDB;
+import xyz.morecraft.dev.xross.torrenter.engine.proto.HashableFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class FileProcessor {
 
     SimpleFileDB SFDB;
     FileEntry FE;
+    FileEntry.FilePart FP;
 
     public void readAllFilesFromFolder(String path) throws IOException, NoSuchAlgorithmException {
         List<File> filesPath = new ArrayList<>();
@@ -40,19 +42,23 @@ public class FileProcessor {
     public void addFile(String path) throws IOException, NoSuchAlgorithmException {
         File file = new File(path);
         ChecksumCounter cc = new ChecksumCounter();
-
         String md5 = cc.generateMD5checksum(file);
 
         addon(SFDB, FE, file, md5);
     }
 
-    public void addon(SimpleFileDB SFDB, FileEntry FE, File file, String md5) {
+    public void addon(SimpleFileDB SFDB, FileEntry FE, File file, String md5) throws IOException {
         if (SFDB.size() == 0) {
 
             new FileEntry(md5, file.getName());
             new SimpleFileDB().add(md5, FE);
 
-            partFile(file);
+            try {
+                splitFile(file, FE);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+
         } else {
             if (!SFDB.getMap().containsKey(md5)) {
                 new FileEntry(md5, file.getName());
@@ -65,33 +71,49 @@ public class FileProcessor {
         }
     }
 
-    private void partFile(File file) {
-        double bytes = file.length();
-        double kilobytes = (bytes / 1024);
-        double megabytes = (kilobytes / 1024);
-        double gigabytes = (megabytes / 1024);
+    public void splitFile(File file, FileEntry FE) throws IOException, NoSuchAlgorithmException {
+        int partCounter = 1;
+        int sizeOfFiles;
+        ChecksumCounter cc = new ChecksumCounter();
 
-        int partsAmount = 1;
-
-        if (kilobytes <= 1.0) {
-            partsAmount = 10;
-        } else if (megabytes <= 1.0) {
-            partsAmount = 100;
-        } else if (gigabytes <= 1.0) {
-            partsAmount = 10000;
+        if (file.length() <= (1024 * 1024)) {
+            sizeOfFiles = 100;
+        } else if (file.length() <= (1024 * 1024 * 1024)) {
+            sizeOfFiles = 1024 * 1024;
         } else {
-            partsAmount = 1000000;
+            sizeOfFiles = 1024 * 1024 * 100;
         }
 
-        //splitFile(file, partsAmount);
+        byte[] buffer = new byte[sizeOfFiles];
+
+        try (BufferedInputStream bis = new BufferedInputStream(
+                new FileInputStream(file))) {
+            String name = file.getName();
+
+            int tmp = 0;
+            while ((tmp = bis.read(buffer)) > 0) {
+/*                File newFile = new File(file.getParent(), name + "."
+                        + String.format("%05d", partCounter++));*/
+
+                String md5 = (cc.generateMD5checksum(file));
+                HashableFile HF = new HashableFile(md5);
+                FP.setOrder(Integer.parseInt(String.format("%05d", partCounter++)));
+                FE.addPart(FP); //TODO - coś mi się tu nie podoba - trzeba to sprawdzić!
+
+                try (FileOutputStream out = new FileOutputStream(newFile)) {
+                    out.write(tmp);//tmp is chunk size
+                }
+            }
+        }
     }
 
-/*    private void splitFile(File file, int partsAmount) {
-
-        FileInputStream inputStream;
-        String newFileName;
-        FileOutputStream filePart;
-
-    }*/
-
+    public static void mergeFiles(List<File> files, File into)
+            throws IOException {
+        try (BufferedOutputStream mergingStream = new BufferedOutputStream(
+                new FileOutputStream(into))) {
+            for (File f : files) {
+                Files.copy(f.toPath(), mergingStream);
+            }
+        }
+    }
 }

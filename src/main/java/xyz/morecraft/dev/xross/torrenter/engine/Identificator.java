@@ -12,7 +12,7 @@ public final class Identificator {
         return new BigInteger(130, random).toString(32);
     }
 
-    public static String randomString() { //TODO - do sprawdzenia
+    public static String randomString() {
         int length = 5;
         char[] characterSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
 
