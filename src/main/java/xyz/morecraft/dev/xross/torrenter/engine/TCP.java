@@ -1,52 +1,48 @@
 package xyz.morecraft.dev.xross.torrenter.engine;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import xyz.morecraft.dev.xross.torrenter.engine.impl.SimpleFileDB;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 public class TCP {
-    public void TCPclient() throws IOException {
-        String sentence;
-        String modifiedSentence;
-        BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-        Socket clientSocket = new Socket("127.0.0.1", 6789);
-        DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
-        BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        sentence = inFromUser.readLine();
-        outToServer.writeBytes(sentence + "\n");
-        modifiedSentence = inFromServer.readLine();
-        System.out.println("FROM SERVER:" + modifiedSentence);
-        clientSocket.close();
+    //tracker port 5555
+
+    public static void TCPServer(int trackerPort) throws IOException {
+
+        ServerSocket serverSocket = new ServerSocket(0);
+
+        Socket socket = serverSocket.accept();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            String[] parts = inputLine.split("\\s");
+            String command = parts[0];
+            String filename = parts[1];
+
+            if (command == "PUSH" || inputLine == "PULL") {
+                TCPClient(serverSocket.getLocalPort(), filename, command);
+            }
+        }
     }
 
-    public void TCPServer() throws IOException {
-        int firsttime = 1;
-        while (true) {
-            String clientSentence;
-            String capitalizedSentence = "";
-            ServerSocket welcomeSocket = new ServerSocket(3248);
-            Socket connectionSocket = welcomeSocket.accept();
-            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-            clientSentence = inFromClient.readLine();
-            //System.out.println(clientSentence);
-            if (clientSentence.equals("set")) {
-                outToClient.writeBytes("connection is ");
-                System.out.println("running here");
-                //welcomeSocket.close();
-                //outToClient.writeBytes(capitalizedSentence);
+    public static void TCPClient(int localPort, String filename, String command) {
+        SimpleFileDB simpleFileDB = new SimpleFileDB();
+
+
+        if (command == "PUSH") {
+            if (!simpleFileDB.contains(filename)) {
+
+            } else {
+
             }
-            capitalizedSentence = clientSentence.toUpperCase() + "\n";
-            //if(!clientSentence.equals("quit"))
-            outToClient.writeBytes(capitalizedSentence + "enter the message or command: ");
-            System.out.println("passed");
-            //outToClient.writeBytes("enter the message or command: ");
-            welcomeSocket.close();
-            System.out.println("connection terminated");
         }
+
+
     }
 }
 
