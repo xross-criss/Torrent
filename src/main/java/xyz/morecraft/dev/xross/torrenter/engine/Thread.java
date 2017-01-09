@@ -5,6 +5,7 @@ public abstract class Thread implements Runnable{
     private String threadName;
 
     Thread(String name){
+        String
      threadName = name;
         System.out.println("Creating" + threadName);
     }
