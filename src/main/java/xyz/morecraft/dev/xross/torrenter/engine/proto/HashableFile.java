@@ -1,8 +1,9 @@
 package xyz.morecraft.dev.xross.torrenter.engine.proto;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class HashableFile {
+public class HashableFile implements Serializable {
 
     private final String controlSum;
     private long size;

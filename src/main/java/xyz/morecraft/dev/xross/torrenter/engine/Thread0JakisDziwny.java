@@ -1,10 +1,10 @@
 package xyz.morecraft.dev.xross.torrenter.engine;
 
-public abstract class Thread implements Runnable{
-    private Thread thread;
+public abstract class Thread0JakisDziwny implements Runnable {
+    private Thread0JakisDziwny thread0JakisDziwny;
     private String threadName;
 
-    Thread(String name){
+    Thread0JakisDziwny(String name) {
         String
      threadName = name;
         System.out.println("Creating" + threadName);
